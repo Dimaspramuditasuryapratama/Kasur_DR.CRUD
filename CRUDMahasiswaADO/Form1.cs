@@ -13,13 +13,7 @@ namespace CRUDMahasiswaADO
         "Data Source=LAPTOP-2QET043V\\DIMAS; Initial Catalog=DBAkademikADO; Integrated Security=True";
 
 
-        public Form1()
-        {
-            InitializeComponent();
-            conn = new SqlConnection(connectionString);
-        }
-
-        
+       
 
         
     }
