@@ -40,11 +40,6 @@ namespace CRUDMahasiswaADO
             ConnectDatabase();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnLoad_Click(object sender, EventArgs e)
         {
             try
@@ -218,7 +213,7 @@ namespace CRUDMahasiswaADO
                     conn.Open();
                 }
 
-                DialogResult dialogResult = MessageBox.Show(
+                DialogResult resultConfirm = MessageBox.Show(
                     "Apakah Anda yakin ingin menghapus data ini?",
                     "Konfirmasi Hapus",
                     MessageBoxButtons.YesNo,
@@ -251,7 +246,7 @@ namespace CRUDMahasiswaADO
             }
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
@@ -264,6 +259,31 @@ namespace CRUDMahasiswaADO
                 txtAlamat.Text = row.Cells["Alamat"].Value.ToString();
                 txtKodeProdi.Text = row.Cells["Kode Prodi"].Value.ToString();
             }
+        }
+
+        private void ClearForm()
+        {
+            txtNIM.Clear();
+            txtNama.Clear();
+            cmbJK.SelectedIndex = -1;
+            dtpTanggalLahir.Value = DateTime.Now;
+            txtAlamat.Clear();
+            txtKodeProdi.Clear();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            cmbJK.Items.Clear();
+            cmbJK.Items.Add("L");
+            cmbJK.Items.Add("P");
+
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView1.MultiSelect = false;
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            dataGridView1.CellClick += dataGridView1_CellClick;
         }
     }
 }
