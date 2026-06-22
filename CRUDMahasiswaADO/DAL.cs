@@ -179,5 +179,66 @@ namespace CRUDMahasiswaADO
             cmdInsert.ExecuteNonQuery();
         }
 
+        public void testInject(string nim)
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            string query = "Update mahasiswa set nama = 'HACKED' where NIM = '" + nim + "';";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.ExecuteNonQuery();
+        }
+
+        public DataTable GetMhsByNIM(string nim)
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            SqlCommand cmd = new SqlCommand("sp_GetMahasiswaByNIM", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("pNIM", nim);
+            da = new SqlDataAdapter(cmd);
+
+            dtMahasiswa = new DataTable();
+            da.Fill(dtMahasiswa);
+
+            return dtMahasiswa;
+        }
+
+        public void InsertLog(string message)
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            SqlCommand cmd = new SqlCommand("sp_LogMessage", conn);
+
+            cmd.Parameters.AddWithValue("psn", message);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.ExecuteNonQuery();
+        }
+
+        public DataTable getProdi()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            SqlCommand cmd = new SqlCommand("select namaprodi from prodi", conn);
+            cmd.CommandType = CommandType.Text;
+            dtProdi = new DataTable();
+            da = new SqlDataAdapter(cmd);
+            da.Fill(dtProdi);
+
+            return dtProdi;
+        }
+
     }
 }
