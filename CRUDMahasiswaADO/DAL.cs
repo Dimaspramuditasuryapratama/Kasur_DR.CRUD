@@ -240,5 +240,90 @@ namespace CRUDMahasiswaADO
             return dtProdi;
         }
 
+        public DataTable getDataRekap(string prodi, DateTime tanggalMasuk)
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            SqlCommand cmd = new SqlCommand("sp_Report", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@inProdi", prodi);
+            cmd.Parameters.AddWithValue("@inTglMsuk", tanggalMasuk.Year.ToString());
+
+            da = new SqlDataAdapter(cmd);
+
+            dtMahasiswa = new DataTable();
+            da.Fill(dtMahasiswa);
+            return dtMahasiswa;
+        }
+
+        public DataTable getAllDataChart()
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            SqlCommand cmd = new SqlCommand("sp_DashBoard", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            da = new SqlDataAdapter(cmd);
+            dtMahasiswa = new DataTable();
+            da.Fill(dtMahasiswa);
+            return dtMahasiswa;
+        }
+
+        // Di DAL.cs
+        public DataTable SearchMhs(string keyword)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    // Mencari berdasarkan NIM atau Nama
+                    string query = @"
+                SELECT * FROM Mahasiswa 
+                WHERE NIM LIKE @keyword 
+                OR Nama LIKE @keyword 
+                OR Alamat LIKE @keyword
+                OR JenisKelamin LIKE @keyword
+                OR KodeProdi LIKE @keyword";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
+
+                        SqlDataAdapter da = new SqlDataAdapter(cmd);
+                        da.Fill(dt);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error searching data: " + ex.Message);
+            }
+            return dt;
+        }
+
+
+        public DataTable getDataChartByTahun(DateTime thMasuk)
+        {
+            if (conn.State == ConnectionState.Closed)
+            {
+                conn.Open();
+            }
+
+            SqlCommand cmd = new SqlCommand("sp_DashBoardByTahun", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@inTglMsuk", thMasuk.Year);
+            da = new SqlDataAdapter(cmd);
+            dtMahasiswa = new DataTable();
+            da.Fill(dtMahasiswa);
+            return dtMahasiswa;
+        }
     }
 }
